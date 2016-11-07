@@ -43,6 +43,11 @@ class Jade {
         $this->jade = new Jade\Jade($options);
     }
 
+    public function getEngine()
+    {
+    	return $this->jade;
+    }
+
     public function view($view, array $data = array(), $return = false) {
 
         if(is_array($view) || $view === TRUE) {
