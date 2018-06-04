@@ -5,7 +5,7 @@ views with *.pug* or *.jade* extension.
 - ci-pug is dependencies-free, so you have just to unzip and put the **Pug.php** and **Jade.php**
 files and **Jade** folder into **application/libraries**
 - but if you use [composer](http://getcomposer.org) you can also
-add ```"pug-php/pug": "~1.11"``` to your **composer.json** to keep
+add ```"pug-php/pug": "^3.0"``` to your **composer.json** to keep
 the Pug renderer engine up to date. The composer dependency will be used
 instead of the embedded engine.
 - all files in the view folder ending with .pug or .jade can be rendered from the
