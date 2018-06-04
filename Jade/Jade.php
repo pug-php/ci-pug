@@ -64,7 +64,7 @@ class Jade
     public function __construct(array $options = array())
     {
         if (is_null($this->options['stream'])) {
-            $this->options['stream'] = $this->streamName . '.stream';
+            $this->options['stream'] = $this->streamName.'.stream';
         }
         $this->options = array_merge($this->options, $options);
     }
@@ -182,10 +182,12 @@ class Jade
 
         extract($vars);
         ob_start();
+
         try {
             include $file;
         } catch (\Exception $e) {
             ob_end_clean();
+
             throw $e;
         }
 
@@ -203,7 +205,7 @@ class Jade
     public function stream($input)
     {
         if (extension_loaded('suhosin') && false === strpos(ini_get('suhosin.executor.include.whitelist'), $this->options['stream'])) {
-            throw new \ErrorException('To run Pug.php on the fly, add "' . $this->options['stream'] . '" to the "suhosin.executor.include.whitelist" settings in your php.ini file.');
+            throw new \ErrorException('To run Pug.php on the fly, add "'.$this->options['stream'].'" to the "suhosin.executor.include.whitelist" settings in your php.ini file.');
         }
 
         if (!in_array($this->options['stream'], static::$wrappersRegistered)) {
@@ -211,7 +213,7 @@ class Jade
             stream_wrapper_register($this->options['stream'], 'Jade\Stream\Template');
         }
 
-        return $this->options['stream'] . '://data;' . $input;
+        return $this->options['stream'].'://data;'.$input;
     }
 
     /**
@@ -227,11 +229,11 @@ class Jade
         $cacheFolder = $this->options['cache'];
 
         if (!is_dir($cacheFolder)) {
-            throw new \ErrorException($cacheFolder . ': Cache directory seem\'s to not exists');
+            throw new \ErrorException($cacheFolder.': Cache directory seem\'s to not exists');
         }
 
         if (is_file($input)) {
-            $path = str_replace('//', '/', $cacheFolder . '/' . ($this->options['keepBaseName'] ? basename($input) : '') . md5($input) . '.php');
+            $path = str_replace('//', '/', $cacheFolder.'/'.($this->options['keepBaseName'] ? basename($input) : '').md5($input).'.php');
 
             // Do not re-parse file if original is older
             if (file_exists($path) && filemtime($input) < filemtime($path)) {
@@ -260,7 +262,7 @@ class Jade
                     continue;
                 }
             }
-            $path = str_replace('//', '/', $cacheFolder . '/' . rtrim(strtr(base64_encode(hash($algo, $input, true)), '+/', '-_'), '='));
+            $path = str_replace('//', '/', $cacheFolder.'/'.rtrim(strtr(base64_encode(hash($algo, $input, true)), '+/', '-_'), '='));
 
             // Do not re-parse file if the same hash exists
             if (file_exists($path)) {

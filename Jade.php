@@ -3,38 +3,37 @@
 /**
  * @author kylekatarnls
  */
-
-class Jade {
-
+class Jade
+{
     protected $CI;
     protected $jade;
     protected $view_path;
 
-    public function __construct(array $options = NULL) {
-
-        if(is_null($options)) {
+    public function __construct(array $options = null)
+    {
+        if (is_null($options)) {
             $options = defined('static::SETTINGS') ? ((array) static::SETTINGS) : array();
         }
-        if(isset($options['view_path'])) {
+        if (isset($options['view_path'])) {
             $this->view_path = $options['view_path'];
             unset($options['view_path']);
         } else {
-            $this->view_path = APPPATH . 'views';
+            $this->view_path = APPPATH.'views';
         }
-        if(isset($options['cache'])) {
-            if($options['cache'] === TRUE) {
-                $options['cache'] = APPPATH . 'cache/jade';
+        if (isset($options['cache'])) {
+            if ($options['cache'] === true) {
+                $options['cache'] = APPPATH.'cache/jade';
             }
-            if(! file_exists($options['cache']) && ! mkdir($options['cache'], 0777, TRUE)) {
-                throw new Exception("Cache folder does not exists and cannot be created.", 1);
+            if (!file_exists($options['cache']) && !mkdir($options['cache'], 0777, true)) {
+                throw new Exception('Cache folder does not exists and cannot be created.', 1);
             }
         }
-        $this->CI =& get_instance();
-        if(! class_exists('Jade\\Jade')) {
+        $this->CI = &get_instance();
+        if (!class_exists('Jade\\Jade')) {
             spl_autoload_register(function ($className) {
-                if(strpos($className, 'Jade\\') === 0) {
-                    $path = __DIR__ . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $className) . '.php';
-                    if(file_exists($path)) {
+                if (strpos($className, 'Jade\\') === 0) {
+                    $path = __DIR__.DIRECTORY_SEPARATOR.str_replace('\\', DIRECTORY_SEPARATOR, $className).'.php';
+                    if (file_exists($path)) {
                         include_once $path;
                     }
                 }
@@ -45,40 +44,40 @@ class Jade {
 
     public function getEngine()
     {
-    	return $this->jade;
+        return $this->jade;
     }
 
-    public function view($view, array $data = array(), $return = false) {
-
-        if(is_array($view) || $view === TRUE) {
-            $return = !! $data;
+    public function view($view, array $data = array(), $return = false)
+    {
+        if (is_array($view) || $view === true) {
+            $return = (bool) $data;
             $data = $view;
-            $view = NULL;
+            $view = null;
         }
-        if($data === TRUE) {
+        if ($data === true) {
             $data = array();
-            $return = TRUE;
+            $return = true;
         }
-        if(is_null($view)) {
-            $view = $this->router->class . DIRECTORY_SEPARATOR . $this->router->method;
+        if (is_null($view)) {
+            $view = $this->router->class.DIRECTORY_SEPARATOR.$this->router->method;
         }
-        if(! $this->jade) {
+        if (!$this->jade) {
             $this->settings();
         }
-        $view = $this->view_path . DIRECTORY_SEPARATOR . $view . '.pug';
-        if(! file_exists($view)) {
+        $view = $this->view_path.DIRECTORY_SEPARATOR.$view.'.pug';
+        if (!file_exists($view)) {
             $isIndex = (strtr('\\', '/', substr($view, -11)) === '/index.pug');
-            $view = $isIndex ? substr($view, 0, -11) . '.pug' : substr($view, 0, -5) . DIRECTORY_SEPARATOR . 'index.pug';
-            if(! file_exists($view)) {
-                $view = $this->view_path . DIRECTORY_SEPARATOR . $view . '.jade';
-                if(! file_exists($view)) {
+            $view = $isIndex ? substr($view, 0, -11).'.pug' : substr($view, 0, -5).DIRECTORY_SEPARATOR.'index.pug';
+            if (!file_exists($view)) {
+                $view = $this->view_path.DIRECTORY_SEPARATOR.$view.'.jade';
+                if (!file_exists($view)) {
                     $isIndex = (strtr('\\', '/', substr($view, -11)) === '/index.jade');
-                    $view = $isIndex ? substr($view, 0, -11) . '.jade' : substr($view, 0, -5) . DIRECTORY_SEPARATOR . 'index.jade';
+                    $view = $isIndex ? substr($view, 0, -11).'.jade' : substr($view, 0, -5).DIRECTORY_SEPARATOR.'index.jade';
                 }
             }
         }
         $data = array_merge($this->CI->load->get_vars(), $data);
-        if($return) {
+        if ($return) {
             return $this->jade->render($view, $data);
         } else {
             echo $this->jade->render($view, $data);

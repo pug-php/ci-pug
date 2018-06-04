@@ -23,7 +23,7 @@ class Parser
     {
         $defaultOptions = array(
             'allowMixedIndent' => true,
-            'extension' => array('.pug', '.jade'),
+            'extension'        => array('.pug', '.jade'),
         );
         foreach ($defaultOptions as $key => $default) {
             $this->$key = isset($options[$key]) ? $options[$key] : $default;
@@ -61,8 +61,8 @@ class Parser
             : $this->extension;
         $extensions[] = '';
         foreach (array_unique($extensions) as $extension) {
-            if (file_exists($path . $extension)) {
-                return $path . $extension;
+            if (file_exists($path.$extension)) {
+                return $path.$extension;
             }
         }
 
@@ -157,7 +157,7 @@ class Parser
             try {
                 $ast = $parser->parse();
             } catch (\Exception $e) {
-                throw new \Exception($parser->filename . ' (' . $block->line . ') : ' . $e->getMessage(), 1, $e);
+                throw new \Exception($parser->filename.' ('.$block->line.') : '.$e->getMessage(), 1, $e);
             }
             $this->context();
 
@@ -180,7 +180,8 @@ class Parser
         $lineNumber = $this->line();
         $lines = explode("\n", $this->input);
         $lineString = isset($lines[$lineNumber]) ? $lines[$lineNumber] : '';
-        throw new \Exception("\n" . sprintf('Expected %s, but got %s in %dth line : %s', $type, $this->peek()->type, $lineNumber, $lineString) . "\n");
+
+        throw new \Exception("\n".sprintf('Expected %s, but got %s in %dth line : %s', $type, $this->peek()->type, $lineNumber, $lineString)."\n");
     }
 
     protected function accept($type)
@@ -195,7 +196,7 @@ class Parser
         $_types = array('tag', 'mixin', 'block', 'case', 'when', 'default', 'extends', 'include', 'doctype', 'filter', 'comment', 'text', 'each', 'code', 'call', 'interpolation');
 
         if (in_array($this->peek()->type, $_types)) {
-            $_method = 'parse' . ucfirst($this->peek()->type);
+            $_method = 'parse'.ucfirst($this->peek()->type);
 
             return $this->$_method();
         }
@@ -217,7 +218,7 @@ class Parser
                 return $this->parseExpression();
 
             default:
-                throw new \Exception($this->filename . ' (' . $this->line() . ') : Unexpected token "' . $this->peek()->type . '"');
+                throw new \Exception($this->filename.' ('.$this->line().') : Unexpected token "'.$this->peek()->type.'"');
         }
     }
 
@@ -343,7 +344,7 @@ class Parser
     {
         $file = $this->expect('extends')->value;
         $dir = realpath(dirname($this->filename));
-        $path = $this->getTemplatePath($dir . DIRECTORY_SEPARATOR . $file);
+        $path = $this->getTemplatePath($dir.DIRECTORY_SEPARATOR.$file);
 
         $string = $this->getTemplateContents($path);
         $parser = new static($string, $path);
@@ -401,27 +402,28 @@ class Parser
         $token = $this->expect('include');
         $file = trim($token->value);
         $dir = realpath(dirname($this->filename));
-        $path = $dir . DIRECTORY_SEPARATOR . $file;
+        $path = $dir.DIRECTORY_SEPARATOR.$file;
 
         if (strpos(basename($file), '.') !== false && !$this->hasValidTemplateExtension($path)) {
             if (!file_exists($path)) {
-                throw new \Exception($file . ' not found at ' . $this->filename . ' (line ' . $token->line . ')');
+                throw new \Exception($file.' not found at '.$this->filename.' (line '.$token->line.')');
             }
 
             return new Nodes\Literal(file_get_contents($path));
         }
 
-        $string = $this->getTemplateContents($dir . DIRECTORY_SEPARATOR . $file);
+        $string = $this->getTemplateContents($dir.DIRECTORY_SEPARATOR.$file);
 
         $parser = new static($string, $path);
         $parser->blocks = $this->blocks;
         $parser->mixins = $this->mixins;
 
         $this->context($parser);
+
         try {
             $ast = $parser->parse();
         } catch (\Exception $e) {
-            throw new \Exception($path . ' (' . $parser->lexer->lineno . ') : ' . $e->getMessage());
+            throw new \Exception($path.' ('.$parser->lexer->lineno.') : '.$e->getMessage());
         }
         $this->context();
         $ast->filename = $path;
@@ -502,7 +504,7 @@ class Parser
                     break;
 
                 default:
-                    $this->parseInlineTags($block, $indent . $this->advance()->value);
+                    $this->parseInlineTags($block, $indent.$this->advance()->value);
             }
         }
 
@@ -611,7 +613,7 @@ class Parser
                     $peek = $this->peek();
                     $escaped = isset($peek->escaped, $peek->escaped[$type]) && $peek->escaped[$type];
                     $value = $escaped || !isset($peek->attributes, $peek->attributes[$type])
-                        ? "'" . $token->value . "'"
+                        ? "'".$token->value."'"
                         : $peek->attributes[$type];
                     $tag->setAttribute($token->type, $value, $escaped);
                     unset($peek->attributes[$type]);
@@ -619,7 +621,7 @@ class Parser
 
                 case 'class':
                     $token = $this->advance();
-                    $tag->setAttribute($token->type, "'" . $token->value . "'");
+                    $tag->setAttribute($token->type, "'".$token->value."'");
                     continue;
 
                 case 'attributes':

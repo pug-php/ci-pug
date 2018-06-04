@@ -49,7 +49,7 @@ class Lexer extends Scanner
     public function token($type, $value = null)
     {
         return (object) array(
-            'type' => $type,
+            'type'   => $type,
             'line'   => $this->lineno,
             'value'  => $value,
         );
@@ -176,7 +176,7 @@ class Lexer extends Scanner
             'AndAttributes',
             'Text',
         ) as $tokenType) {
-            if ($token = $this->{'scan' . $tokenType}()) {
+            if ($token = $this->{'scan'.$tokenType}()) {
                 return $token;
             }
         }

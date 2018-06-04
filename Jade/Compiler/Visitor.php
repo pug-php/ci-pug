@@ -37,7 +37,7 @@ abstract class Visitor extends AttributesCompiler
         $fqn = get_class($node);
         $parts = explode('\\', $fqn);
         $name = end($parts);
-        $method = 'visit' . ucfirst(strtolower($name));
+        $method = 'visit'.ucfirst(strtolower($name));
 
         return $this->$method($node);
     }
@@ -90,7 +90,7 @@ abstract class Visitor extends AttributesCompiler
         $this->visit($node->block);
 
         $code = $this->createCode('break;');
-        $this->buffer($code . $this->newline());
+        $this->buffer($code.$this->newline());
     }
 
     /**
@@ -127,7 +127,7 @@ abstract class Visitor extends AttributesCompiler
             ? $this->doctypes[$doc]
             : "<!DOCTYPE {$doc}>";
 
-        $this->buffer($str . $this->newline());
+        $this->buffer($str.$this->newline());
 
         $this->terse = (strtolower($str) == '<!doctype html>');
 
@@ -162,7 +162,7 @@ abstract class Visitor extends AttributesCompiler
             $filter = new $filter();
         }
         if (!is_callable($filter)) {
-            throw new \InvalidArgumentException($node->name . ': Filter must be callable');
+            throw new \InvalidArgumentException($node->name.': Filter must be callable');
         }
         $this->buffer($filter($node, $this));
     }
@@ -181,7 +181,7 @@ abstract class Visitor extends AttributesCompiler
     protected function visitComment(Comment $comment)
     {
         if ($comment->buffer) {
-            $this->buffer('<!--' . $comment->value . '-->');
+            $this->buffer('<!--'.$comment->value.'-->');
         }
     }
 
@@ -195,12 +195,12 @@ abstract class Visitor extends AttributesCompiler
         }
 
         list($open, $close) = strlen($comment->value) && 0 === strpos(trim($comment->value), 'if')
-            ? array('[' . trim($comment->value) . ']>', '<![endif]')
+            ? array('['.trim($comment->value).']>', '<![endif]')
             : array($comment->value, '');
 
-        $this->buffer('<!--' . $open);
+        $this->buffer('<!--'.$open);
         $this->visit($comment->block);
-        $this->buffer($close . '-->');
+        $this->buffer($close.'-->');
     }
 
     /**

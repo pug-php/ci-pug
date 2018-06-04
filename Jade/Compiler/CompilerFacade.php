@@ -117,7 +117,7 @@ abstract class CompilerFacade extends CompilerUtils
                 $value = static::joinAny($attribute['value']);
                 $attributes['class'] = empty($attributes['class'])
                     ? $value
-                    : static::joinAny($attributes['class']) . ' ' . $value;
+                    : static::joinAny($attributes['class']).' '.$value;
             }
         }
         if (isset($attributes['class'])) {
@@ -135,7 +135,7 @@ abstract class CompilerFacade extends CompilerUtils
         if (is_array($attributes) || $attributes instanceof Traversable) {
             foreach ($attributes as $key => $value) {
                 if ($key !== 'class' && $value !== false && $value !== 'null') {
-                    echo ' ' . $key . '=' . $quote . htmlspecialchars($value) . $quote;
+                    echo ' '.$key.'='.$quote.htmlspecialchars($value).$quote;
                 }
             }
         }
