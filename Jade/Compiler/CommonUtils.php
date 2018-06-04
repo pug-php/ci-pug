@@ -18,13 +18,13 @@ class CommonUtils
     public static function addDollarIfNeeded($call)
     {
         if ($call === 'Inf') {
-            throw new \Exception($call . ' cannot be read from PHP', 1);
+            throw new \Exception($call.' cannot be read from PHP', 1);
         }
         if ($call === 'undefined') {
             return 'null';
         }
-        if ($call[0] !== '$' && $call[0] !== '\\' && !preg_match('#^(?:' . CompilerConfig::VARNAME . '\\s*\\(|(?:null|false|true)(?![a-z]))#i', $call)) {
-            $call = '$' . $call;
+        if ($call[0] !== '$' && $call[0] !== '\\' && !preg_match('#^(?:'.CompilerConfig::VARNAME.'\\s*\\(|(?:null|false|true)(?![a-z]))#i', $call)) {
+            $call = '$'.$call;
         }
 
         return $call;

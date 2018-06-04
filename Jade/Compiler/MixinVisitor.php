@@ -28,7 +28,7 @@ abstract class MixinVisitor extends CodeVisitor
                     unset($arguments[$key]);
                 }
 
-                $defaultAttributes[] = var_export($tab[0], true) . ' => ' . $tab[1];
+                $defaultAttributes[] = var_export($tab[0], true).' => '.$tab[1];
                 $arguments[$newArrayKey][$tab[0]] = static::decodeValue($tab[1]);
                 continue;
             }
@@ -85,21 +85,21 @@ abstract class MixinVisitor extends CodeVisitor
         $arguments = func_get_args();
         $begin = array_shift($arguments);
         $begin = is_array($begin)
-            ? $begin[0] . 'function ' . $begin[1]
-            : $begin . 'function ';
+            ? $begin[0].'function '.$begin[1]
+            : $begin.'function ';
         $params = implode(', ', array_map(function ($name) {
-            return (substr($name, 0, 1) === '$' ? '' : '$') . $name;
+            return (substr($name, 0, 1) === '$' ? '' : '$').$name;
         }, $arguments));
 
         if ($this->restrictedScope) {
-            return $this->buffer($this->createCode($begin . '(' . $params . ') {'));
+            return $this->buffer($this->createCode($begin.'('.$params.') {'));
         }
 
-        $params = '&$__varHandler, ' . $params;
+        $params = '&$__varHandler, '.$params;
 
         $this->buffer(
-            $this->createCode($begin . '(' . $params . ') {') .
-            $this->createCode($this->indent() . 'extract($__varHandler, EXTR_SKIP);')
+            $this->createCode($begin.'('.$params.') {').
+            $this->createCode($this->indent().'extract($__varHandler, EXTR_SKIP);')
         );
     }
 
@@ -107,10 +107,10 @@ abstract class MixinVisitor extends CodeVisitor
     {
         if (!$this->restrictedScope) {
             $this->buffer($this->createCode(
-                'foreach ($__varHandler as $key => &$val) {' .
-                'if ($key !== \'__varHandler\') {' .
-                '$val = ${$key};' .
-                '}' .
+                'foreach ($__varHandler as $key => &$val) {'.
+                'if ($key !== \'__varHandler\') {'.
+                '$val = ${$key};'.
+                '}'.
                 '}'
             ));
         }
@@ -145,7 +145,7 @@ abstract class MixinVisitor extends CodeVisitor
                 $nextIndex = count($strings);
                 $strings[] = $match[0];
 
-                return 'stringToReplaceBy' . $nextIndex . 'ThCapture';
+                return 'stringToReplaceBy'.$nextIndex.'ThCapture';
             },
             $arguments
         );
@@ -180,7 +180,7 @@ abstract class MixinVisitor extends CodeVisitor
             $this->buffer($this->createCode('$__varHandler = get_defined_vars();'));
             $paramsPrefix = '$__varHandler, ';
         }
-        $codeFormat = str_repeat('%s;', count($arguments) - 1) . "{$name}({$paramsPrefix}%s)";
+        $codeFormat = str_repeat('%s;', count($arguments) - 1)."{$name}({$paramsPrefix}%s)";
 
         array_unshift($arguments, $codeFormat);
 
@@ -248,10 +248,10 @@ abstract class MixinVisitor extends CodeVisitor
      */
     protected function visitMixin(Mixin $mixin)
     {
-        $name = strtr($mixin->name, '-', '_') . '_mixin';
+        $name = strtr($mixin->name, '-', '_').'_mixin';
         $blockName = var_export($mixin->name, true);
         if ($this->allowMixinOverride) {
-            $name = '$GLOBALS[\'' . $name . '\']';
+            $name = '$GLOBALS[\''.$name.'\']';
         }
         $attributes = static::decodeAttributes($mixin->attributes);
 

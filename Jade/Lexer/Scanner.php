@@ -27,7 +27,7 @@ abstract class Scanner extends MixinScanner
     protected function scanComment()
     {
         $indent = count($this->indentStack) ? $this->indentStack[0] : 0;
-        if (preg_match('/^ *\/\/(-)?([^\n]*(\n+[ \t]{' . ($indent + 1) . ',}[^\n]*)*)/', $this->input, $matches)) {
+        if (preg_match('/^ *\/\/(-)?([^\n]*(\n+[ \t]{'.($indent + 1).',}[^\n]*)*)/', $this->input, $matches)) {
             $this->consume($matches[0]);
             $value = isset($matches[2]) ? $matches[2] : '';
             if (isset($matches[3])) {
@@ -137,7 +137,7 @@ abstract class Scanner extends MixinScanner
         if (preg_match('/^(\$?\w+) += *([^;\n]+|\'[^\']+\'|"[^"]+")( *;? *)/', $this->input, $matches)) {
             $this->consume($matches[0]);
 
-            return $this->token('code', (substr($matches[1], 0, 1) === '$' ? '' : '$') . $matches[1] . '=' . $matches[2]);
+            return $this->token('code', (substr($matches[1], 0, 1) === '$' ? '' : '$').$matches[1].'='.$matches[2]);
         }
     }
 

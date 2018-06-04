@@ -110,7 +110,7 @@ class Compiler extends MixinVisitor
      */
     protected function closingTag()
     {
-        return '?>' . ($this->prettyprint ? ' ' : '');
+        return '?>'.($this->prettyprint ? ' ' : '');
     }
 
     /**
@@ -126,7 +126,7 @@ class Compiler extends MixinVisitor
 
         // Separate in several lines to get a useable line number in case of an error occurs
         if ($this->phpSingleLine) {
-            $code = str_replace(array('<?php', '?>'), array("<?php\n", "\n" . $this->closingTag()), $code);
+            $code = str_replace(array('<?php', '?>'), array("<?php\n", "\n".$this->closingTag()), $code);
         }
         // Remove the $ wich are not needed
         return $code;
@@ -156,7 +156,7 @@ class Compiler extends MixinVisitor
     protected function buffer($line, $indent = null)
     {
         if (($indent !== null && $indent == true) || ($indent === null && $this->prettyprint)) {
-            $line = $this->indent() . $line . $this->newline();
+            $line = $this->indent().$line.$this->newline();
         }
 
         $this->buffer[] = $line;
@@ -182,7 +182,7 @@ class Compiler extends MixinVisitor
             // arrray\(\)                   - matches against the old array construct
             // []                           - matches against the new/shorter array construct
             // (const=>)?const(,recursion)  - matches against the value list, values can be a constant or a new array built of constants
-            if (preg_match("/array[ \t]*\((?R)\)|\\[(?R)\\]|(" . static::CONSTANT_VALUE . '=>)?' . static::CONSTANT_VALUE . '(,(?R))?/', $str, $matches)) {
+            if (preg_match("/array[ \t]*\((?R)\)|\\[(?R)\\]|(".static::CONSTANT_VALUE.'=>)?'.static::CONSTANT_VALUE.'(,(?R))?/', $str, $matches)) {
                 // cant use ^ and $ because the patter is recursive
                 if (strlen($matches[0]) == strlen($str)) {
                     return true;
@@ -200,7 +200,7 @@ class Compiler extends MixinVisitor
      */
     protected function isConstant($str)
     {
-        return preg_match('/^' . static::CONSTANT_VALUE . '$/', trim($str));
+        return preg_match('/^'.static::CONSTANT_VALUE.'$/', trim($str));
     }
 
     /**
@@ -252,7 +252,7 @@ class Compiler extends MixinVisitor
 
             if (preg_match('/^(([\'"]).*?(?<!\\\\)(?:\\\\\\\\)*\2)(.*)$/', $part[0], $match)) {
                 if (mb_strlen(trim($match[3]))) {
-                    throw new \Exception('Unexpected value: ' . $match[3]);
+                    throw new \Exception('Unexpected value: '.$match[3]);
                 }
                 array_push($resultsString, $match[1]);
                 continue;
@@ -312,7 +312,7 @@ class Compiler extends MixinVisitor
             $arg = static::convertVarPath($arg);
 
             // add dollar if missing
-            if (preg_match('/^' . static::VARNAME . '(\s*,.+)?$/', $arg)) {
+            if (preg_match('/^'.static::VARNAME.'(\s*,.+)?$/', $arg)) {
                 $arg = static::addDollarIfNeeded($arg);
             }
 
@@ -323,7 +323,7 @@ class Compiler extends MixinVisitor
             }
 
             // if we have a php variable assume that the string is good php
-            if (strpos('{[', substr($arg, 0, 1)) === false && preg_match('/&?\${1,2}' . static::VARNAME . '|[A-Za-z0-9_\\\\]+::/', $arg)) {
+            if (strpos('{[', substr($arg, 0, 1)) === false && preg_match('/&?\${1,2}'.static::VARNAME.'|[A-Za-z0-9_\\\\]+::/', $arg)) {
                 array_push($variables, $arg);
                 continue;
             }
@@ -352,7 +352,7 @@ class Compiler extends MixinVisitor
             try {
                 return $this->handleCode(preg_replace('#/\*(.*)\*/#', '', $arg));
             } catch (\Exception $e) {
-                throw new \Exception('Pug.php did not understand ' . $arg, 1, $e);
+                throw new \Exception('Pug.php did not understand '.$arg, 1, $e);
             }
         }
     }
@@ -366,7 +366,7 @@ class Compiler extends MixinVisitor
     protected function createPhpBlock($code, $statements = null)
     {
         if ($statements == null) {
-            return '<?php ' . $code . ' ' . $this->closingTag();
+            return '<?php '.$code.' '.$this->closingTag();
         }
 
         $codeFormat = array_pop($statements);
@@ -375,20 +375,20 @@ class Compiler extends MixinVisitor
         if (count($statements) == 0) {
             $phpString = call_user_func_array('sprintf', $codeFormat);
 
-            return '<?php ' . $phpString . ' ' . $this->closingTag();
+            return '<?php '.$phpString.' '.$this->closingTag();
         }
 
         $stmtString = '';
         foreach ($statements as $stmt) {
-            $stmtString .= $this->newline() . $this->indent() . $stmt . ';';
+            $stmtString .= $this->newline().$this->indent().$stmt.';';
         }
 
-        $stmtString .= $this->newline() . $this->indent();
+        $stmtString .= $this->newline().$this->indent();
         $stmtString .= call_user_func_array('sprintf', $codeFormat);
 
         $phpString = '<?php ';
         $phpString .= $stmtString;
-        $phpString .= $this->newline() . $this->indent() . ' ' . $this->closingTag();
+        $phpString .= $this->newline().$this->indent().' '.$this->closingTag();
 
         return $phpString;
     }

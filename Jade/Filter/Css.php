@@ -9,6 +9,6 @@ class Css extends AbstractFilter
 {
     public function __invoke(Filter $node, Compiler $compiler)
     {
-        return '<style type="text/css">' . $this->getNodeString($node, $compiler) . '</style>';
+        return '<style type="text/css">'.$this->getNodeString($node, $compiler).'</style>';
     }
 }

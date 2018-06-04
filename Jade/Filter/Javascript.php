@@ -18,6 +18,6 @@ class Javascript extends AbstractFilter
      */
     public function __invoke(Filter $node, Compiler $compiler)
     {
-        return '<script type="text/javascript">' . $this->getNodeString($node, $compiler) . '</script>';
+        return '<script type="text/javascript">'.$this->getNodeString($node, $compiler).'</script>';
     }
 }

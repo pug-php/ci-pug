@@ -31,12 +31,12 @@ abstract class CompilerUtils extends Indenter
             return $match[0];
         }
 
-        $var = ($match[0] === ',' ? ',' : '') . $match[1];
+        $var = ($match[0] === ',' ? ',' : '').$match[1];
         foreach (explode('.', substr($match[2], 1)) as $name) {
             if (!empty($name)) {
-                $var = '\\Jade\\Compiler::getPropertyFromAnything(' .
-                    static::addDollarIfNeeded($var) .
-                    ', ' . var_export($name, true) . ')';
+                $var = '\\Jade\\Compiler::getPropertyFromAnything('.
+                    static::addDollarIfNeeded($var).
+                    ', '.var_export($name, true).')';
             }
         }
 
@@ -53,7 +53,7 @@ abstract class CompilerUtils extends Indenter
      */
     protected static function convertVarPath($arg, $regexp = '/^%s|,%s/')
     {
-        $pattern = '\s*(\\${0,2}' . static::VARNAME . ')((\.' . static::VARNAME . ')*)';
+        $pattern = '\s*(\\${0,2}'.static::VARNAME.')((\.'.static::VARNAME.')*)';
 
         return preg_replace_callback(
             str_replace('%s', $pattern, $regexp),

@@ -14,7 +14,7 @@ class CodeHandler extends CompilerUtils
     public function __construct($input, $name)
     {
         if (!is_string($input)) {
-            throw new \Exception('Expecting a string of PHP, got: ' . gettype($input));
+            throw new \Exception('Expecting a string of PHP, got: '.gettype($input));
         }
 
         if (strlen($input) == 0) {
@@ -40,7 +40,7 @@ class CodeHandler extends CompilerUtils
         }
 
         if (strpos('=])},;?', substr($this->input, 0, 1)) !== false) {
-            throw new \Exception('Expecting a variable name or an expression, got: ' . $this->input);
+            throw new \Exception('Expecting a variable name or an expression, got: '.$this->input);
         }
 
         preg_match_all(
@@ -164,7 +164,7 @@ class CodeHandler extends CompilerUtils
             } while ($curr != null && $count > 0);
 
             if ($close && $count) {
-                throw new \Exception($input . "\nMissing closing: " . $close);
+                throw new \Exception($input."\nMissing closing: ".$close);
             }
 
             if ($end !== false) {
@@ -207,11 +207,11 @@ class CodeHandler extends CompilerUtils
                 // funcall
                 case '(':
                     $arguments = $handleCodeInbetween();
-                    $call = $varname . '(' . implode(', ', $arguments) . ')';
+                    $call = $varname.'('.implode(', ', $arguments).')';
                     $currentSeparator = current($separators);
                     $call = static::addDollarIfNeeded($call);
                     while ($currentSeparator && in_array($currentSeparator[0], array('->', '(', ')'))) {
-                        $call .= $currentSeparator[0] . $getMiddleString(current($separators), $getNext(key($separators)));
+                        $call .= $currentSeparator[0].$getMiddleString(current($separators), $getNext(key($separators)));
                         $currentSeparator = next($separators);
                     }
                     $varname = $var;
@@ -222,7 +222,7 @@ class CodeHandler extends CompilerUtils
                 case ',':
                     $arguments = $handleCodeInbetween();
                     if ($arguments) {
-                        $varname .= ', ' . implode(', ', $arguments);
+                        $varname .= ', '.implode(', ', $arguments);
                     }
                     break;
 
@@ -246,7 +246,7 @@ class CodeHandler extends CompilerUtils
                         }
                         $output[] = empty($value)
                             ? $key
-                            : $key . ' => ' . $value;
+                            : $key.' => '.$value;
                         $key = '';
                         $value = null;
                     };
@@ -283,7 +283,7 @@ class CodeHandler extends CompilerUtils
                                         break;
                                     }
                                     if (!is_null($value)) {
-                                        throw new \Exception('Parse error on ' . substr($argument, strlen($match[1])), 1);
+                                        throw new \Exception('Parse error on '.substr($argument, strlen($match[1])), 1);
                                     }
                                     $key .= $match[1];
                                     $value = '';
@@ -302,22 +302,22 @@ class CodeHandler extends CompilerUtils
                         }
                         $addToOutput();
                     }
-                    $varname .= 'array(' . implode(', ', $output) . ')';
+                    $varname .= 'array('.implode(', ', $output).')';
                     break;
 
                 case '=':
                     if (preg_match('/^[[:space:]]*$/', $innerName)) {
                         next($separators);
                         $arguments = $handleCodeInbetween();
-                        $varname .= '=' . implode($arguments);
+                        $varname .= '='.implode($arguments);
                         break;
                     }
-                    $varname .= '=' . $handleRecursion(array($sep, end($separators)));
+                    $varname .= '='.$handleRecursion(array($sep, end($separators)));
                     break;
 
                 default:
                     if (($innerName !== false && $innerName !== '') || $sep[0] != ')') {
-                        $varname .= $sep[0] . $innerName;
+                        $varname .= $sep[0].$innerName;
                     }
                     break;
             }

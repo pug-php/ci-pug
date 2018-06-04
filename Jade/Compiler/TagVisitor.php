@@ -11,18 +11,18 @@ abstract class TagVisitor extends Visitor
      */
     protected function visitTagAttributes(Tag $tag, $newLinePrettyPrint, $close = '>')
     {
-        $open = '<' . $tag->name;
-        $close = $this->getClassesDisplayCode() . $close;
+        $open = '<'.$tag->name;
+        $close = $this->getClassesDisplayCode().$close;
 
         if (count($tag->attributes)) {
-            $this->buffer($this->indent() . $open, false);
+            $this->buffer($this->indent().$open, false);
             $this->visitAttributes($tag->attributes);
-            $this->buffer($close . $this->newline(), false);
+            $this->buffer($close.$this->newline(), false);
 
             return;
         }
 
-        $this->buffer($open . $close, $newLinePrettyPrint ? null : false);
+        $this->buffer($open.$close, $newLinePrettyPrint ? null : false);
     }
 
     /**
@@ -32,9 +32,9 @@ abstract class TagVisitor extends Visitor
     {
         if (isset($tag->buffer)) {
             if (preg_match('`^[a-z][a-zA-Z0-9]+(?!\()`', $tag->name)) {
-                $tag->name = '$' . $tag->name;
+                $tag->name = '$'.$tag->name;
             }
-            $tag->name = trim($this->createCode('echo ' . $tag->name . ';'));
+            $tag->name = trim($this->createCode('echo '.$tag->name.';'));
         }
     }
 
@@ -61,7 +61,7 @@ abstract class TagVisitor extends Visitor
 
         if (!$selfClosing) {
             $this->visitTagContents($tag);
-            $this->buffer('</' . $tag->name . '>');
+            $this->buffer('</'.$tag->name.'>');
         }
     }
 
